@@ -2,9 +2,11 @@ package com.kodilla.game;
 
 public class Player {
 
+
     String player;
     char symbol;
     int wonRounds;
+
 
     public Player(String player, char symbol, int wonRounds) {
         this.symbol = symbol;

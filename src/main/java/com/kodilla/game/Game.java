@@ -25,7 +25,11 @@ public class Game {
 
         String rows = game.board.stream().map(l -> "" +l.get(0) + l.get(1) + l.get(2))
                 .collect(Collectors.joining());
-        return rows.contains(" ");
+        if (rows.contains(" ")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public Player checkIfThereIsAWinnerForRound(Game game) {

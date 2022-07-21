@@ -72,10 +72,12 @@ public class Controller implements Initializable {
         numberOfRoundsLabel.setText("");
         playerTwoTF.clear();
         playerOneTF.clear();
-        choiceLevelBox.setDisable(false);
+        isComputerCheckBox.setSelected(false);
         playerOneTF.setEditable(true);
         playerTwoTF.setEditable(true);
         statisticLabel.setText("");
+        startPlayGame.setDisable(false);
+        choiceLevelBox.setDisable(false);
     }
 
     public void setChoiceLevelBox(ActionEvent actionEvent){
@@ -91,14 +93,15 @@ public class Controller implements Initializable {
             button.setText("");
             winnerText.setText("");
             endText.setText("");
+            currentPlayer = game.players.get(0);
+
     }
 
     private void buttonOrganization(Button button) {
         button.setOnMouseClicked(mouseEvent -> {
             try {
-
                 button.setDisable(true);
-                button.setText(currentPlayer.symbol + "");
+                button.setText(currentPlayer.symbol +"");
 
                 if (button.getId().equals("button1")) {
                     makeMove(game, currentPlayer, 0, 0);
@@ -121,8 +124,8 @@ public class Controller implements Initializable {
                 }
             }
             catch (Exception exception){
-                setAlert();
-            }
+                    setAlert();
+                }
         });
     }
 
@@ -160,6 +163,7 @@ public class Controller implements Initializable {
         }
     }
 
+
     public void makeMove(Game game, Player player, int x, int y){
         char requestedMove = game.board.get(x).get(y);
 
@@ -168,6 +172,7 @@ public class Controller implements Initializable {
             Player possibleWinner = game.checkIfThereIsAWinnerForRound(game);
 
             if (possibleWinner != null){
+
                 buttons.forEach(button -> button.setDisable(true));
                 endOfTheRound(possibleWinner);
                 showStatistics();
@@ -177,16 +182,14 @@ public class Controller implements Initializable {
 
                     if(currentPlayer.equals(game.players.get(0))) {
                         currentPlayer = game.players.get(1);
-                         if (isComputerCheckBox.isSelected()) {
-                         computerMove(game);
-                         }
+                        if (isComputerCheckBox.isSelected()) {
+                            computerMove(game);
+                        }
 
                     } else {
                         currentPlayer = game.players.get(0);
                     }
-                }
-                else {
-
+                } else {
                     endText.setText("");
                     endOfTheRound(null);
                     game.cleanBoard(game);
@@ -195,6 +198,24 @@ public class Controller implements Initializable {
                 }
             }
         }
+        else {
+            System.out.println("This tile is already taken, You lose!");
+        }
+
+        printBoard(game.board);
+        System.out.println("is board playable?: " + game.isBoardPlayable(game));
+        System.out.println("current player is: " + currentPlayer);
+        game.isBoardPlayable(game);
+
+
+
+
+    }
+    public static void printBoard(List<List<Character>> board ) {
+        System.out.println("[" + board.get(0).get(0) +"]"+ "["+ board.get(0).get(1) + "]" + "[" +board.get(0).get(2)+"]");
+        System.out.println("[" + board.get(1).get(0) +"]"+ "["+ board.get(1).get(1) + "]" + "[" +board.get(1).get(2)+"]");
+        System.out.println("[" + board.get(2).get(0) +"]"+ "["+ board.get(2).get(1) + "]" + "[" +board.get(2).get(2)+"]");
+
     }
 
     public void computerMove(Game game) {
@@ -242,6 +263,7 @@ public class Controller implements Initializable {
             playerOneTF.setEditable(false);
             playerTwoTF.setEditable(false);
         }
+
        catch (Exception exception){
                setAlert();
        }
@@ -273,7 +295,9 @@ public class Controller implements Initializable {
             if (winningPlayer.getWonRounds() >= game.numbersOfRoundsToWin){
                 winnerText.setText("End Game, The Winner is: " + winningPlayer.player);
                 nextRound.setDisable(true);
+                startPlayGame.setDisable(true);
                 newGameButton.setDisable(false);
+
 
             }
             else {
@@ -282,7 +306,7 @@ public class Controller implements Initializable {
             }
         }
         else {
-            endText.setText("There is no Winner!");
+            endText.setText("There is no Winner! The Game is Tied");
             game.roundCounter++;
         }
     }
